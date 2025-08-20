@@ -1,0 +1,26 @@
+.input-field {
+  display: grid;
+  gap: 6px;
+  max-width: 520px;
+}
+
+.input-field__label {
+  font-weight: 600;
+}
+
+.input-field__value {
+  font-variant-numeric: tabular-nums;
+}
+
+.input-field__range {
+  width: 100%;
+  accent-color: #1f77b4; /* tweak to match theme */
+}
+
+.input-field__scale {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  color: #666;
+}
+

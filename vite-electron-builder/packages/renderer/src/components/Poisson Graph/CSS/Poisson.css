@@ -1,0 +1,29 @@
+/* src/components/Poisson Graph/CSS/poisson.css */
+.poisson-card {
+  display: grid;
+  gap: 12px;
+  max-width: 520px;
+}
+
+.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+}
+
+.section-title {
+  margin-top: 24px;
+}
+
+.poisson-chart {
+  width: 100%;
+  height: 480px;
+  max-width: 720px;
+}
+
+/* Optional niceties */
+.recharts-default-tooltip {
+  font-size: 0.9rem;
+}
+.recharts-label-list text {
+  font-weight: 600;
+}

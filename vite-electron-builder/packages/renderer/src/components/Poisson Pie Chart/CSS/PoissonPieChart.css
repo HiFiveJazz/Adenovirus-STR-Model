@@ -1,0 +1,40 @@
+:root {
+  --pie-uninfected: #1f77b4; /* blue for k=0 */
+  --pie-infected: #ff7f0e;   /* orange for k>=1 */
+}
+
+.poisson-pie {
+  margin-top: 24px;
+}
+
+.poisson-pie-chart {
+  width: 100%;
+  height: 20rem;
+}
+
+/* Let labels render outside when needed */
+.poisson-pie-chart .recharts-wrapper,
+.poisson-pie-chart svg {
+  overflow: visible !important;
+}
+
+/* label styles */
+.pie-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.pie-label--inside {
+  fill: #fff;         /* white text on colored slice */
+  text-anchor: middle;
+}
+
+.pie-label--outside {
+  fill: #333;         /* darker text when placed outside */
+}
+
+/* Optional: tidy tooltip */
+.recharts-default-tooltip {
+  font-size: 0.9rem;
+}
+
