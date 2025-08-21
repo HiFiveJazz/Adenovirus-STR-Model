@@ -4,9 +4,10 @@ export default function InputField({
   label = 'λ (lambda)',
   value,
   onChange,
-  min = 0.1,
-  max = 18,
+  min = 0.05,
+  max = 7,
   step = 0.1,
+  formatValue = (v) => v.toFixed(2), // ⬅️ new: custom display formatter
 }) {
   const handleChange = (e) => {
     const v = Number(e.target.value)
@@ -16,7 +17,7 @@ export default function InputField({
   return (
     <div className="input-field">
       <label className="input-field__label">
-        {label}: <span className="input-field__value">{value.toFixed(2)}</span>
+        {label}: <span className="input-field__value">{formatValue(value)}</span>
       </label>
       <input
         className="input-field__range"
@@ -35,4 +36,3 @@ export default function InputField({
     </div>
   )
 }
-

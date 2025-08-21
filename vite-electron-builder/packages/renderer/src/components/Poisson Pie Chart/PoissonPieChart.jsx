@@ -40,7 +40,7 @@ function renderSliceLabel({
 
 export default function PoissonPieChart({
   lambda = 3,
-  title = 'Cell Infection Breakdown',
+  title = 'Infection Effeciency',
 }) {
   const data = useMemo(() => {
     const lam = Number(lambda)
@@ -90,4 +90,3 @@ export default function PoissonPieChart({
     </div>
   )
 }
-
