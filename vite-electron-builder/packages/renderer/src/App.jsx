@@ -3,10 +3,14 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 
+
 import PoissonDemo from './components/Poisson Graph/PoissonDemo'
 import PoissonPieChart from './components/Poisson Pie Chart/PoissonPieChart'
 import InputField from './components/Input Fields/InputField'
 import OutputField from './components/Output Fields/OutputField'
+import Graph from './components/Graph/Graph'
+
+
 
 export default function App() {
   // controls
@@ -129,7 +133,16 @@ export default function App() {
           step={0.05}
           formatValue={(v) => v.toFixed(2)}
         />
+      <Graph
+        lambda={lambda}
+        doubTime={doubTime}
+        cellDensity={cellDensity}
+        infectionHour={120}
+        endHour={168}
+        stepHours={6}
+      />
     </>
+
   )
 }
 
