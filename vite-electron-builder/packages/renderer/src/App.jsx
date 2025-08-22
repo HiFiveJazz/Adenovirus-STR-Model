@@ -77,15 +77,6 @@ export default function App() {
       {/* Controls */}
       <div style={{ display: 'grid', gap: 12, maxWidth: 720 }}>
         <InputField
-          label="Day 5 MOI (IU/cell)"
-          value={lambda}
-          onChange={setLambda}
-          min={0.1}
-          max={5.5}
-          step={0.05}
-          formatValue={(v) => v.toFixed(2)}
-        />
-        <InputField
           label="Cell Doubling Time (hours)"
           value={doubTime}
           onChange={setDoubTime}
@@ -128,7 +119,16 @@ export default function App() {
 
       {/* Visuals (driven by λ) */}
       <PoissonDemo lambda={lambda} defaultX={0} />
-      <PoissonPieChart lambda={lambda} title="Cell Infection Breakdown" />
+      <PoissonPieChart lambda={lambda} title="Infection Efficiency" />
+        <InputField
+          label="Day 5 MOI (IU/cell)"
+          value={lambda}
+          onChange={setLambda}
+          min={0.1}
+          max={5.5}
+          step={0.05}
+          formatValue={(v) => v.toFixed(2)}
+        />
     </>
   )
 }
