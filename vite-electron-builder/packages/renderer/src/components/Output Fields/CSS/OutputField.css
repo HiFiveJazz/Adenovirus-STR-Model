@@ -6,33 +6,27 @@
   background: #fff;
   box-shadow: 0 1px 3px rgba(0,0,0,.05);
 }
-
 .output-title {
   margin: 0 0 12px 0;
   font-size: 1.1rem;
 }
-
 .output-grid {
   display: grid;
   gap: 10px;
 }
-
 .output-row {
   display: grid;
   grid-template-columns: 1fr auto;
   align-items: baseline;
   gap: 12px;
 }
-
 .output-label {
   color: #374151;
 }
-
 .output-value {
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
-
 .unit {
   font-weight: 500;
   color: #6b7280;
