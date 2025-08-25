@@ -1,74 +1,78 @@
-
+// src/components/Graph/Graph.jsx
 import { useMemo } from 'react'
 import './CSS/Graph.css'
 import {
   ResponsiveContainer,
-  LineChart,
-  Line,
+  AreaChart,
+  Area,
   XAxis,
   YAxis,
   CartesianGrid,
   Tooltip,
   Legend,
   ReferenceLine,
+  Line,
 } from 'recharts'
-
-/**
- * Plots uninfected cells over time.
- * Props:
- *  - lambda: number (MOI-style, used to compute infected fraction = 1 - e^-lambda)
- *  - doubTime: number (hours)
- *  - cellDensity: number (Day 0 cells/mL)
- *  - infectionHour: number (default 120)
- *  - endHour: number (default 168)
- *  - stepHours: number (default 6)
- */
 
 export default function Graph({
   lambda,
   doubTime,
   cellDensity,
-  infectionHour = 120,
+  infectionHour = 120,     // 5.00 days (kept as-is for reference)
   endHour = 168,
   stepHours = 6,
-  title = 'Uninfected Cells Over Time',
+  title = 'Cells Over Time',
 }) {
   const data = useMemo(() => {
     const rows = []
+
     const infFrac = (Number.isFinite(lambda) && lambda >= 0) ? 1 - Math.exp(-lambda) : NaN
     const uninfFrac = Number.isFinite(infFrac) ? (1 - infFrac) : NaN
 
-    const safeDT = (Number.isFinite(doubTime) && doubTime > 0) ? doubTime : NaN
-    const safeN0 = (Number.isFinite(cellDensity) && cellDensity > 0) ? cellDensity : NaN
+    const DT = (Number.isFinite(doubTime) && doubTime > 0) ? doubTime : NaN
+    const N0 = (Number.isFinite(cellDensity) && cellDensity > 0) ? cellDensity : NaN
 
-    const day5Pop =
-      (Number.isFinite(safeN0) && Number.isFinite(safeDT))
-        ? safeN0 * Math.pow(2, infectionHour / safeDT)
-        : NaN
+    // ⇩ New: infected “starts” at 5.25 days = 126 h
+    const splitHour = infectionHour  // 0.25 day * 24 h = 6 h
+    const popAtSplit = (Number.isFinite(N0) && Number.isFinite(DT))
+      ? N0 * Math.pow(2, splitHour / DT)
+      : NaN
 
     for (let h = 0; h <= endHour; h += stepHours) {
-      let uninfected
-      if (h <= infectionHour) {
-        uninfected =
-          (Number.isFinite(safeN0) && Number.isFinite(safeDT))
-            ? safeN0 * Math.pow(2, h / safeDT)
-            : NaN
+      let uninfected, infected
+
+      if (h <= splitHour) {
+        // Before split: everyone is still “uninfected”
+        uninfected = (Number.isFinite(N0) && Number.isFinite(DT))
+          ? N0 * Math.pow(2, h / DT)
+          : NaN
+        infected = 0
       } else {
-        // Uninfected at infection time, then continue doubling
-        const uninfAtInfection =
-          (Number.isFinite(day5Pop) && Number.isFinite(uninfFrac))
-            ? day5Pop * uninfFrac // == day5Pop * Math.exp(-lambda)
-            : NaN
-        uninfected =
-          (Number.isFinite(uninfAtInfection) && Number.isFinite(safeDT))
-            ? uninfAtInfection * Math.pow(2, (h - infectionHour) / safeDT)
-            : NaN
+        // After split:
+        // Uninfected keep doubling from the uninfected portion at split
+        const uninfAtSplit = (Number.isFinite(popAtSplit) && Number.isFinite(uninfFrac))
+          ? popAtSplit * uninfFrac
+          : NaN
+        uninfected = (Number.isFinite(uninfAtSplit) && Number.isFinite(DT))
+          ? uninfAtSplit * Math.pow(2, (h - splitHour) / DT)
+          : NaN
+
+        // Infected start at split, then decay 7%/day
+        const infAtSplit = (Number.isFinite(popAtSplit) && Number.isFinite(infFrac))
+          ? popAtSplit * infFrac
+          : NaN
+        const daysSinceSplit = (h - splitHour) / 24
+        infected = (Number.isFinite(infAtSplit))
+          ? infAtSplit * Math.pow(0.93, daysSinceSplit)
+          : NaN
       }
 
       rows.push({
         hour: h,
         day: h / 24,
         uninfected,
+        infected,
+        total: (Number.isFinite(uninfected) && Number.isFinite(infected)) ? (uninfected + infected) : NaN,
       })
     }
     return rows
@@ -79,11 +83,23 @@ export default function Graph({
       <h2 className="graph-title">{title}</h2>
       <div className="graph-container">
         <ResponsiveContainer>
-          <LineChart
+          <AreaChart
             data={data}
             margin={{ top: 10, right: 24, bottom: 10, left: 16 }}
           >
+            <defs>
+              <linearGradient id="fillUninf" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#1f77b4" stopOpacity={0.7} />
+                <stop offset="100%" stopColor="#1f77b4" stopOpacity={0.15} />
+              </linearGradient>
+              <linearGradient id="fillInf" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#ff7f0e" stopOpacity={0.7} />
+                <stop offset="100%" stopColor="#ff7f0e" stopOpacity={0.15} />
+              </linearGradient>
+            </defs>
+
             <CartesianGrid strokeDasharray="3 3" />
+
             <XAxis
               dataKey="day"
               type="number"
@@ -92,43 +108,67 @@ export default function Graph({
               tickFormatter={(d) => d.toFixed(1)}
               label={{ value: 'Days', position: 'insideBottom', offset: -4 }}
             />
+
+            {/* Y axis in millions */}
             <YAxis
-              tickFormatter={(v) => {
-                if (!Number.isFinite(v)) return ''
-                // compact formatting for large cell counts
-                return v >= 1e7 ? `${(v / 1e6).toFixed(1)}M` :
-                       v >= 1e4 ? `${Math.round(v).toLocaleString()}` :
-                       Math.round(v).toString()
-              }}
-              label={{ value: 'Cells/mL (uninfected)', angle: -90, position: 'insideLeft' }}
+              tickFormatter={(v) => (Number.isFinite(v) ? (v / 1_000_000).toFixed(1) : '')}
+              label={{ value: 'Cells/mL (millions)', angle: -90, position: 'insideLeft' }}
             />
+
             <Tooltip
-              formatter={(v, n) => {
-                if (n === 'Uninfected Cells') {
-                  return [Math.round(v).toLocaleString(), n]
-                }
-                return [v, n]
-              }}
+              formatter={(v, name) => [Math.round(v).toLocaleString(), name]}
               labelFormatter={(label) => `Day ${label.toFixed(2)}`}
             />
             <Legend />
-            {/* vertical marker at infection time (day 5) */}
+
+            {/* ⇩ Move the vertical marker to 5.25 days */}
             <ReferenceLine
-              x={infectionHour / 24}
+              x={(infectionHour) / 24}
               stroke="#8884d8"
               strokeDasharray="4 4"
-              label={{ value: 'Infection', position: 'top' }}
+              label={{ value: 'Infected begins', position: 'top' }}
             />
-            <Line
+
+            {/* Stacked areas */}
+            <Area
               type="monotone"
               dataKey="uninfected"
-              name="Uninfected Cells"
-              dot={false}
-              strokeWidth={2}
+              name="Uninfected"
+              stackId="cells"
+              stroke="#1f77b4"
+              fill="url(#fillUninf)"
+              isAnimationActive
+              animationDuration={500}
+              animationEasing="ease-in-out"
             />
-          </LineChart>
+            <Area
+              type="monotone"
+              dataKey="infected"
+              name="Infected"
+              stackId="cells"
+              stroke="#ff7f0e"
+              fill="url(#fillInf)"
+              isAnimationActive
+              animationDuration={500}
+              animationEasing="ease-in-out"
+            />
+
+            {/* Optional thin line for total */}
+            <Line
+              type="monotone"
+              dataKey="total"
+              name="Total Cells"
+              stroke="#333"
+              strokeWidth={2}
+              dot={false}
+              isAnimationActive
+              animationDuration={500}
+              animationEasing="ease-in-out"
+            />
+          </AreaChart>
         </ResponsiveContainer>
       </div>
     </div>
   )
 }
+
