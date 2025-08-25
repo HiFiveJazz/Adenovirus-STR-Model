@@ -23,6 +23,7 @@ import {
  *  - endHour: number (default 168)
  *  - stepHours: number (default 6)
  */
+
 export default function Graph({
   lambda,
   doubTime,
