@@ -80,6 +80,37 @@ export default function App() {
     <>
       {/* Controls */}
       <div style={{ display: 'grid', gap: 12, maxWidth: 720 }}>
+      </div>
+
+      {/* Outputs */}
+      <OutputField
+        title="Model Outputs"
+        day5CellDensity={day5CellDensity}
+        infectionEfficiencyDay5={infectionEfficiencyDay5}
+        nonProductiveCellsDay7={nonProductiveCellsDay7}
+        projectedYieldDay7={projectedYieldDay7}
+      />
+
+      {/* Visuals (driven by λ) */}
+      <PoissonDemo lambda={lambda} defaultX={0} />
+      <PoissonPieChart lambda={lambda} title="Infection Efficiency" />
+      <Graph
+        lambda={lambda}
+        doubTime={doubTime}
+        cellDensity={cellDensity}
+        infectionHour={120}
+        endHour={168}
+        stepHours={6}
+      />
+        <InputField
+          label="Day 5 MOI (IU/cell)"
+          value={lambda}
+          onChange={setLambda}
+          min={0.1}
+          max={5.5}
+          step={0.05}
+          formatValue={(v) => v.toFixed(2)}
+        />
         <InputField
           label="Cell Doubling Time (hours)"
           value={doubTime}
@@ -110,37 +141,6 @@ export default function App() {
           step={1}
           formatValue={(v) => `${Math.round(v)}`}
         />
-      </div>
-
-      {/* Outputs */}
-      <OutputField
-        title="Model Outputs"
-        day5CellDensity={day5CellDensity}
-        infectionEfficiencyDay5={infectionEfficiencyDay5}
-        nonProductiveCellsDay7={nonProductiveCellsDay7}
-        projectedYieldDay7={projectedYieldDay7}
-      />
-
-      {/* Visuals (driven by λ) */}
-      <PoissonDemo lambda={lambda} defaultX={0} />
-      <PoissonPieChart lambda={lambda} title="Infection Efficiency" />
-        <InputField
-          label="Day 5 MOI (IU/cell)"
-          value={lambda}
-          onChange={setLambda}
-          min={0.1}
-          max={5.5}
-          step={0.05}
-          formatValue={(v) => v.toFixed(2)}
-        />
-      <Graph
-        lambda={lambda}
-        doubTime={doubTime}
-        cellDensity={cellDensity}
-        infectionHour={120}
-        endHour={168}
-        stepHours={6}
-      />
     </>
 
   )

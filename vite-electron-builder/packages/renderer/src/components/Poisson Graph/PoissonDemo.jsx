@@ -36,27 +36,27 @@ export default function PoissonDemo({ lambda = 3, defaultX = 0 }) {
 
   return (
     <>
-      <div className="card poisson-card">
-        <label>
-          x (non-negative integer):{' '}
-          <input
-            type="number"
-            min="0"
-            step="1"
-            value={x}
-            onChange={(e) =>
-              setX(Number.isNaN(e.target.valueAsNumber) ? 0 : e.target.valueAsNumber)
-            }
-          />
-        </label>
-
-        <div>
-          <strong>P(X = {x}, λ = {lambda.toFixed ? lambda.toFixed(2) : lambda})</strong>
-          <div className="mono">
-            {Number.isNaN(value) ? '—' : `${(value * 100).toFixed(2)}%`}
-          </div>
-        </div>
-      </div>
+      {/* <div className="card poisson-card"> */}
+      {/*   <label> */}
+      {/*     x (non-negative integer):{' '} */}
+      {/*     <input */}
+      {/*       type="number" */}
+      {/*       min="0" */}
+      {/*       step="1" */}
+      {/*       value={x} */}
+      {/*       onChange={(e) => */}
+      {/*         setX(Number.isNaN(e.target.valueAsNumber) ? 0 : e.target.valueAsNumber) */}
+      {/*       } */}
+      {/*     /> */}
+      {/*   </label> */}
+      {/**/}
+      {/*   <div> */}
+      {/*     <strong>P(X = {x}, λ = {lambda.toFixed ? lambda.toFixed(2) : lambda})</strong> */}
+      {/*     <div className="mono"> */}
+      {/*       {Number.isNaN(value) ? '—' : `${(value * 100).toFixed(2)}%`} */}
+      {/*     </div> */}
+      {/*   </div> */}
+      {/* </div> */}
 
       <h2 className="section-title">Percent of Cell Population (Day 5)</h2>
 
