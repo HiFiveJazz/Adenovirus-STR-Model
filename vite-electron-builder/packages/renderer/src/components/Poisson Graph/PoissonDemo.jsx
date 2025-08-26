@@ -34,67 +34,89 @@ export default function PoissonDemo({ lambda = 3, defaultX = 0 }) {
     }))
   }, [lambda])
 
+  // Colors from CSS variables (styling lives in CSS)
+  const k0Color =
+    getComputedStyle(document.documentElement)
+      .getPropertyValue('--poisson-k0')
+      ?.trim() || '#1f77b4'
+  const kNColor =
+    getComputedStyle(document.documentElement)
+      .getPropertyValue('--poisson-kN')
+      ?.trim() || '#ff7f0e'
+
+
+  function YAxisTitle({ viewBox }) {
+    const { x, y, height } = viewBox || {};
+    const cx = (x ?? 0) - 36;            // how far left from the axis line
+    const cy = (y ?? 0) + (height ?? 0) / 2; // vertical center of the axis
+    return (
+      <text
+        x={cx}
+        y={cy}
+        transform={`rotate(-90, ${cx}, ${cy})`}
+        textAnchor="middle"
+        dominantBaseline="middle"
+        className="y-axis-title"
+      >
+        Infectious Events
+      </text>
+    );
+  }
+
   return (
     <>
-      {/* <div className="card poisson-card"> */}
-      {/*   <label> */}
-      {/*     x (non-negative integer):{' '} */}
-      {/*     <input */}
-      {/*       type="number" */}
-      {/*       min="0" */}
-      {/*       step="1" */}
-      {/*       value={x} */}
-      {/*       onChange={(e) => */}
-      {/*         setX(Number.isNaN(e.target.valueAsNumber) ? 0 : e.target.valueAsNumber) */}
-      {/*       } */}
-      {/*     /> */}
-      {/*   </label> */}
-      {/**/}
-      {/*   <div> */}
-      {/*     <strong>P(X = {x}, λ = {lambda.toFixed ? lambda.toFixed(2) : lambda})</strong> */}
-      {/*     <div className="mono"> */}
-      {/*       {Number.isNaN(value) ? '—' : `${(value * 100).toFixed(2)}%`} */}
-      {/*     </div> */}
-      {/*   </div> */}
-      {/* </div> */}
-
       <h2 className="section-title">Percent of Cell Population (Day 5)</h2>
 
       <div className="poisson-chart">
-        <ResponsiveContainer>
-          <BarChart
-            data={dist}
-            layout="vertical"
-            margin={{ top: 10, right: 80, bottom: 10, left: 80 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis type="number" hide domain={[0, 'dataMax']} />
-            <YAxis
-              type="category"
-              dataKey="k"
-              width={40}
-              label={{
-                value: 'Infectious Events per Cell',
-                angle: -90,
-                position: 'insideLeft',
-              }}
-            />
-            <Tooltip
-              formatter={(v) => [`${Number(v).toFixed(2)}%`, 'Percent']}
-              labelFormatter={(label) => `k = ${label}`}
-            />
-            <Bar dataKey="pPct">
-              {dist.map((entry, i) => (
-                <Cell key={`cell-${i}`} fill={entry.k === 0 ? '#1f77b4' : '#ff7f0e'} />
-              ))}
-              <LabelList
-                dataKey="pPct"
-                position="right"
-                formatter={(v) => `${Number(v).toFixed(2)}%`}
+        <div className="poisson-chart-inner">
+          <ResponsiveContainer>
+            <BarChart
+              data={dist}
+              layout="vertical"
+              /* Give the SVG room for the left axis label & right value labels */
+              margin={{ top: 0, right: 30, bottom: 0, left: 0 }}
+            >
+              <CartesianGrid horizontal={false} vertical={false} strokeDasharray="3 3" />
+              <XAxis
+                type="number"
+                // tickLine={false}
+                // axisLine={false}
+                // tick = {false}
+                hide
+                domain={[0, 'dataMax']}
               />
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
+              <YAxis
+                type="category"
+                dataKey="k"
+                width={50} /* reserve space for ticks + the rotated label */
+                // tickLine={false}
+                axisLine={false}
+                label={{
+                  value: 'Infectious Events',  // shorter label helps in 200px tall charts
+                  angle: -90,
+                  position: 'insideLeft',
+                  offset: 20,                  // pushes text off the axis so it centers nicely
+                  dy: 60,
+                }}
+              />
+              <Tooltip
+                formatter={(v) => [`${Number(v).toFixed(2)}%`, 'Percent']}
+                labelFormatter={(label) => `k = ${label}`}
+              />
+              <Bar dataKey="pPct">
+                {dist.map((entry, i) => (
+                  <Cell key={`cell-${i}`} fill={entry.k === 0 ? k0Color : kNColor} />
+                ))}
+                <LabelList
+                  dataKey="pPct"
+                  position="right"
+                  offset={8} /* nudge the label inside the margin so it doesn't clip */
+                  formatter={(v) => `${Number(v).toFixed(2)}%`}
+                />
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
       </div>
     </>
   )

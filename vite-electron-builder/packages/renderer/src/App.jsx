@@ -94,14 +94,14 @@ export default function App() {
       {/* Visuals (driven by λ) */}
       <PoissonDemo lambda={lambda} defaultX={0} />
       <PoissonPieChart lambda={lambda} title="Infection Efficiency" />
-      <Graph
-        lambda={lambda}
-        doubTime={doubTime}
-        cellDensity={cellDensity}
-        infectionHour={120}
-        endHour={168}
-        stepHours={6}
-      />
+      {/* <Graph */}
+      {/*   lambda={lambda} */}
+      {/*   doubTime={doubTime} */}
+      {/*   cellDensity={cellDensity} */}
+      {/*   infectionHour={120} */}
+      {/*   endHour={168} */}
+      {/*   stepHours={6} */}
+      {/* /> */}
         <InputField
           label="Day 5 MOI (IU/cell)"
           value={lambda}

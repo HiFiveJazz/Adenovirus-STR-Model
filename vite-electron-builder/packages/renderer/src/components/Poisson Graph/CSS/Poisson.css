@@ -1,4 +1,10 @@
-/* src/components/Poisson Graph/CSS/poisson.css */
+/* Theme variables */
+:root {
+  --poisson-k0: #1f77b4; /* blue for k = 0 */
+  --poisson-kN: #ff7f0e; /* orange for k >= 1 */
+  /* Inner padding that used to be BarChart margin: top right bottom left */
+}
+
 .poisson-card {
   display: grid;
   gap: 12px;
@@ -6,7 +12,8 @@
 }
 
 .mono {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+  font-family:
+    ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     "Liberation Mono", "Courier New", monospace;
 }
 
@@ -16,14 +23,31 @@
 
 .poisson-chart {
   width: 100%;
-  height: 480px;
-  max-width: 720px;
+  height: 200px;       /* chart height */
+  max-width: 300px;    /* optional max width */
 }
 
-/* Optional niceties */
+.poisson-chart-inner {
+  height: 100%;
+  /* padding: var(--poisson-chart-padding); */
+
+  padding-right: -30px;
+  padding-left: -30px;
+  /* padding-top: 3px; */
+  box-sizing: border-box;
+}
+
+/* Tooltip niceties */
 .recharts-default-tooltip {
   font-size: 0.9rem;
 }
+
+/* Bar labels */
 .recharts-label-list text {
-  font-weight: 600;
+  font-weight: 300;
 }
+.poisson-chart svg {
+  overflow: visible !important;
+}
+.poisson-chart .recharts-cartesian-axis-tick tspan { font-size: 13px; }
+.poisson-chart .recharts-label-list text { font-size: 13px; font-weight: 300; }
