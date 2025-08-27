@@ -50,4 +50,4 @@
   overflow: visible !important;
 }
 .poisson-chart .recharts-cartesian-axis-tick tspan { font-size: 13px; }
-.poisson-chart .recharts-label-list text { font-size: 13px; font-weight: 300; }
+.poisson-chart .recharts-label-list text { font-size: 0.8rem; font-weight: 300; }

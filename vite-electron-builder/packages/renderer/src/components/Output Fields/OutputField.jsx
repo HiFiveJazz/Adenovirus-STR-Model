@@ -30,7 +30,7 @@ export default function OutputField({
       <h2 className="output-title">{title}</h2>
       <div className="output-grid">
         <div className="output-row">
-          <div className="output-label">Day 5 Cell Density:</div>
+          <div className="output-label">Cell Density (Day 5):</div>
           <div className="output-value">{fmtInt(day5CellDensity)} <span className="unit">cells/mL</span></div>
         </div>
         <div className="output-row">
@@ -42,7 +42,7 @@ export default function OutputField({
           <div className="output-value">{fmtPct(nonProductiveCellsDay7)}</div>
         </div>
         <div className="output-row">
-          <div className="output-label">Projected yield on Day 7 (vp/mL):</div>
+          <div className="output-label">Projected Yield (Day 7):</div>
           <div className="output-value">{fmtSci(projectedYieldDay7)} <span className="unit">vp/mL</span></div>
         </div>
       </div>
