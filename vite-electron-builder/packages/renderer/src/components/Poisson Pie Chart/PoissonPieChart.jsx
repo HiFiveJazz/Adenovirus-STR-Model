@@ -40,7 +40,9 @@ function renderSliceLabel({
 
 export default function PoissonPieChart({
   lambda = 3,
-  title = 'Infection Effeciency',
+  title = 'Infection Efficiency',
+  compact = false,      // ← NEW: overlay-friendly mode
+  className = '',       // ← NEW
 }) {
   const data = useMemo(() => {
     const lam = Number(lambda)
@@ -53,26 +55,28 @@ export default function PoissonPieChart({
     ]
   }, [lambda])
 
-  // use CSS vars directly (works in SVG fill)
+  // CSS vars (work in SVG)
   const COLORS = ['var(--pie-uninfected)', 'var(--pie-infected)']
 
   return (
-    <div className="poisson-pie">
-      <h2 className="section-title">{title}</h2>
+    <div className={`poisson-pie ${compact ? 'poisson-pie--compact' : ''} ${className}`}>
+      {!compact && <h2 className="section-title">{title}</h2>}
 
       <div className="poisson-pie-chart">
-        <ResponsiveContainer>
-          <PieChart margin={{ top: 10, right: 30, bottom: 10, left: 30 }}>
+        {/* IMPORTANT: fill the wrapper */}
+        <ResponsiveContainer width="100%" height="100%">
+          <PieChart
+            margin={compact ? { top: 0, right: 0, bottom: 0, left: 0 }
+                            : { top: 10, right: 30, bottom: 10, left: 30 }}
+          >
             <Pie
               data={data}
               dataKey="value"
               nameKey="name"
               cx="50%"
               cy="50%"
-              // full pie (no donut)
               innerRadius={0}
-              outerRadius="80%"
-              // custom labels to avoid clipping
+              outerRadius={compact ? '85%' : '80%'}
               label={renderSliceLabel}
               labelLine={false}
               isAnimationActive={false}
@@ -82,11 +86,13 @@ export default function PoissonPieChart({
               ))}
             </Pie>
 
-            <Tooltip formatter={(v, n) => [`${Number(v).toFixed(2)}%`, n]} />
-            <Legend />
+            {/* Hide legend/tooltip when compact */}
+            {!compact && <Tooltip formatter={(v, n) => [`${Number(v).toFixed(2)}%`, n]} />}
+            {!compact && <Legend />}
           </PieChart>
         </ResponsiveContainer>
       </div>
     </div>
   )
 }
+

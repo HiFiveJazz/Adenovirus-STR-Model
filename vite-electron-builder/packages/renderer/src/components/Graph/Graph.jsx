@@ -82,7 +82,9 @@ export default function Graph({
     <div className="graph-card">
       <h2 className="graph-title">{title}</h2>
       <div className="graph-container">
-        <ResponsiveContainer>
+
+        {/* <ResponsiveContainer> */}
+        <ResponsiveContainer height="100%" width="100%">
           <AreaChart
             data={data}
             margin={{ top: 10, right: 24, bottom: 10, left: 16 }}
@@ -126,7 +128,7 @@ export default function Graph({
               x={(infectionHour) / 24}
               stroke="#8884d8"
               strokeDasharray="4 4"
-              label={{ value: 'Infected begins', position: 'top' }}
+              label={{ value: 'Infection Begins', position: 'top' }}
             />
 
             {/* Stacked areas */}

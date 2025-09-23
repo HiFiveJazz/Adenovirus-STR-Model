@@ -3,21 +3,18 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 import './App.css'
 
-
 import PoissonDemo from './components/Poisson Graph/PoissonDemo'
 import PoissonPieChart from './components/Poisson Pie Chart/PoissonPieChart'
 import InputField from './components/Input Fields/InputField'
 import OutputField from './components/Output Fields/OutputField'
 import Graph from './components/Graph/Graph'
 
-
-
 export default function App() {
   // controls
   const [lambda, setLambda] = useState(3)
   const [doubTime, setDoubTime] = useState(27.7)       // hours
-  const [cellDensity, setCellDensity] = useState(3e6) // cells/mL (Day 0)
-  const [burstSize, setBurstSize] = useState(100)     // vp/cell (Day 7)
+  const [cellDensity, setCellDensity] = useState(3e6)  // cells/mL (Day 0)
+  const [burstSize, setBurstSize] = useState(100)      // vp/cell (Day 7)
 
   // ⬇️ Use the exact formula you gave for Day 5 Cell Density
   const {
@@ -80,6 +77,7 @@ export default function App() {
     <>
       {/* Controls */}
       <div style={{ display: 'grid', gap: 12, maxWidth: 720 }}>
+        {/* (Assuming you’ll place your controls here later) */}
       </div>
 
       {/* Outputs */}
@@ -93,56 +91,65 @@ export default function App() {
 
       {/* Visuals (driven by λ) */}
       <PoissonDemo lambda={lambda} defaultX={0} />
-      <PoissonPieChart lambda={lambda} title="Infection Efficiency" />
-      {/* <Graph */}
-      {/*   lambda={lambda} */}
-      {/*   doubTime={doubTime} */}
-      {/*   cellDensity={cellDensity} */}
-      {/*   infectionHour={120} */}
-      {/*   endHour={168} */}
-      {/*   stepHours={6} */}
-      {/* /> */}
-        <InputField
-          label="Day 5 MOI (IU/cell)"
-          value={lambda}
-          onChange={setLambda}
-          min={0.1}
-          max={5.5}
-          step={0.05}
-          formatValue={(v) => v.toFixed(2)}
-        />
-        <InputField
-          label="Cell Doubling Time (hours)"
-          value={doubTime}
-          onChange={setDoubTime}
-          min={10}
-          max={72}
-          step={0.1}
-          // was: v => `${v.toFixed(0)} h`
-          formatValue={(v) => `${v.toFixed(2)} h`}   // shows 27.70, matches the value used
+
+      {/* Graph + top-left overlayed pie */}
+      <div className="graph-stack">
+        <Graph
+          lambda={lambda}
+          doubTime={doubTime}
+          cellDensity={cellDensity}
+          infectionHour={120}
+          endHour={168}
+          stepHours={6}
         />
 
-        <InputField
-          label="Day 0 Cell Density (cells/mL)"
-          value={cellDensity}
-          onChange={setCellDensity}
-          min={3e6}
-          max={3e7}
-          step={1e4}
-          // avoid Math.round so we don't mask the true value
-          formatValue={(v) => v.toLocaleString()}   // exact value shown with separators
-        />
-        <InputField
-          label="Day 7 Burst Size (vp/cell)"
-          value={burstSize}
-          onChange={setBurstSize}
-          min={1}
-          max={1000}
-          step={1}
-          formatValue={(v) => `${Math.round(v)}`}
-        />
+        <div className="overlay-pie">
+          <PoissonPieChart
+            lambda={lambda}
+            title="Infection Efficiency"
+            compact
+          />
+        </div>
+      </div>
+
+      {/* Sliders/inputs */}
+      <InputField
+        label="Day 5 MOI (IU/cell)"
+        value={lambda}
+        onChange={setLambda}
+        min={0.1}
+        max={5.5}
+        step={0.05}
+        formatValue={(v) => v.toFixed(2)}
+      />
+      <InputField
+        label="Cell Doubling Time (hours)"
+        value={doubTime}
+        onChange={setDoubTime}
+        min={10}
+        max={72}
+        step={0.1}
+        formatValue={(v) => `${v.toFixed(2)} h`}
+      />
+      <InputField
+        label="Day 0 Cell Density (cells/mL)"
+        value={cellDensity}
+        onChange={setCellDensity}
+        min={3e6}
+        max={3e7}
+        step={1e4}
+        formatValue={(v) => v.toLocaleString()}
+      />
+      <InputField
+        label="Day 7 Burst Size (vp/cell)"
+        value={burstSize}
+        onChange={setBurstSize}
+        min={1}
+        max={1000}
+        step={1}
+        formatValue={(v) => `${Math.round(v)}`}
+      />
     </>
-
   )
 }
 

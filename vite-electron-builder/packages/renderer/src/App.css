@@ -4,3 +4,47 @@
   /* padding: 2rem; */
   /* text-align: center; */
 }
+/* Your existing app styles can stay above/below. These are the new bits. */
+
+/* A wrapper that stacks the graph and the overlayed pie chart */
+.graph-stack {
+  position: relative;
+  width: 100%;
+  max-width: 940px;
+  margin-top: 16px;
+}
+
+/* The overlay itself, pinned top-left of the graph area */
+.overlay-pie {
+  outline: 1px dashed magenta;
+  position: absolute;
+  top: 66px;
+  left: 94px;
+  z-index: 3;
+  width: clamp(160px, 22vw, 260px);
+  height: clamp(120px, 20vw, 220px);
+  pointer-events: auto; /* keep tooltips/hover working */
+}
+
+/* Optional: background for readability on busy charts */
+.overlay-pie .poisson-pie {
+  /* background: color-mix(in oklab, white 70%, transparent); */
+  /* backdrop-filter: saturate(1.1) blur(2px); */
+  /* border: 1px solid rgba(0,0,0,.06); */
+  /* border-radius: 10px; */
+  background: transparent;
+  border: none;
+  padding: 0px;
+}
+
+@media (prefers-color-scheme: dark) {
+  .overlay-pie .poisson-pie {
+    background: color-mix(in oklab, black 35%, transparent);
+    border-color: rgba(255,255,255,.08);
+  }
+}
+
+/* On very small screens, move pie to top-right so it doesn't cover the Y axis */
+/* @media (max-width: 520px) { */
+/*   .overlay-pie { left: auto; right: 8px; } */
+/* } */
