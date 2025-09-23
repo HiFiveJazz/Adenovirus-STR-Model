@@ -1,6 +1,4 @@
 import { useMemo, useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 
 import PoissonDemo from './components/Poisson Graph/PoissonDemo'
@@ -10,77 +8,63 @@ import OutputField from './components/Output Fields/OutputField'
 import Graph from './components/Graph/Graph'
 
 export default function App() {
-  // controls
   const [lambda, setLambda] = useState(3)
-  const [doubTime, setDoubTime] = useState(27.7)       // hours
-  const [cellDensity, setCellDensity] = useState(3e6)  // cells/mL (Day 0)
-  const [burstSize, setBurstSize] = useState(100)      // vp/cell (Day 7)
+  const [doubTime, setDoubTime] = useState(27.7)
+  const [cellDensity, setCellDensity] = useState(3e6)
+  const [burstSize, setBurstSize] = useState(100)
 
-  // ⬇️ Use the exact formula you gave for Day 5 Cell Density
   const {
     day5CellDensity,
     infectionEfficiencyDay5,
-    nonProductiveCellsDay7, // fraction 0..1
-    projectedYieldDay7,     // vp/mL
+    nonProductiveCellsDay7,
+    projectedYieldDay7,
   } = useMemo(() => {
-    const INFECTION_HOUR = 120; // hours
-    const FINAL_HOUR = 168;     // hours
+    const INFECTION_HOUR = 120
+    const FINAL_HOUR = 168
 
     const growth = (N0, hours, dt) =>
       (Number.isFinite(N0) && Number.isFinite(hours) && Number.isFinite(dt) && dt > 0)
         ? N0 * Math.pow(2, hours / dt)
-        : NaN;
+        : NaN
 
-    // Day 5 density at infection time
-    const N5 = growth(cellDensity, INFECTION_HOUR, doubTime);
+    const N5 = growth(cellDensity, INFECTION_HOUR, doubTime)
 
-    // Infection efficiency (fraction)
-    const infFrac =
-      (Number.isFinite(lambda) && lambda >= 0) ? 1 - Math.exp(-lambda) : NaN;
-    const uninfFrac =
-      (Number.isFinite(infFrac)) ? (1 - infFrac) : NaN;
+    const infFrac = (Number.isFinite(lambda) && lambda >= 0) ? 1 - Math.exp(-lambda) : NaN
+    const uninfFrac = Number.isFinite(infFrac) ? (1 - infFrac) : NaN
 
-    // Initial infected & uninfected at infection time
-    const initInfCd   = (Number.isFinite(N5) && Number.isFinite(infFrac))   ? N5 * infFrac   : NaN;
-    const initUninfCd = (Number.isFinite(N5) && Number.isFinite(uninfFrac)) ? N5 * uninfFrac : NaN;
+    const initInfCd   = (Number.isFinite(N5) && Number.isFinite(infFrac))   ? N5 * infFrac   : NaN
+    const initUninfCd = (Number.isFinite(N5) && Number.isFinite(uninfFrac)) ? N5 * uninfFrac : NaN
 
-    // Uninfected grow from 120h to 168h; infected assumed not to grow
     const gf = (Number.isFinite(doubTime) && doubTime > 0)
       ? Math.pow(2, (FINAL_HOUR - INFECTION_HOUR) / doubTime)
-      : NaN;
+      : NaN
     const finUninfCd = (Number.isFinite(initUninfCd) && Number.isFinite(gf))
       ? initUninfCd * gf
-      : NaN;
+      : NaN
 
-    // Non-Productive Cells at end of run (fraction)
     const denom = (Number.isFinite(finUninfCd) && Number.isFinite(initInfCd))
       ? (finUninfCd + initInfCd)
-      : NaN;
+      : NaN
     const nonProdFrac = (Number.isFinite(finUninfCd) && Number.isFinite(denom) && denom > 0)
       ? (finUninfCd / denom)
-      : NaN;
+      : NaN
 
-    // Projected Bioreactor Yield (vp/mL)
     const yieldVpPerMl = (Number.isFinite(initInfCd) && Number.isFinite(burstSize))
       ? (initInfCd * burstSize)
-      : NaN;
+      : NaN
 
     return {
       day5CellDensity: N5,
       infectionEfficiencyDay5: infFrac,
-      nonProductiveCellsDay7: nonProdFrac, // fraction 0..1
-      projectedYieldDay7: yieldVpPerMl,    // vp/mL
-    };
-  }, [lambda, doubTime, cellDensity, burstSize]);
+      nonProductiveCellsDay7: nonProdFrac,
+      projectedYieldDay7: yieldVpPerMl,
+    }
+  }, [lambda, doubTime, cellDensity, burstSize])
 
   return (
     <>
-      {/* Controls */}
-      <div style={{ display: 'grid', gap: 12, maxWidth: 720 }}>
-        {/* (Assuming you’ll place your controls here later) */}
-      </div>
+      <div style={{ display: 'grid', gap: 12, maxWidth: 720 }} />
 
-      {/* Outputs */}
       <OutputField
         title="Model Outputs"
         day5CellDensity={day5CellDensity}
@@ -89,10 +73,7 @@ export default function App() {
         projectedYieldDay7={projectedYieldDay7}
       />
 
-      {/* Visuals (driven by λ) */}
-      <PoissonDemo lambda={lambda} defaultX={0} />
-
-      {/* Graph + top-left overlayed pie */}
+      {/* Graph with overlay stack anchored inside the plot */}
       <div className="graph-stack">
         <Graph
           lambda={lambda}
@@ -103,12 +84,24 @@ export default function App() {
           stepHours={6}
         />
 
-        <div className="overlay-pie">
-          <PoissonPieChart
-            lambda={lambda}
-            title="Infection Efficiency"
-            compact
-          />
+        {/* Overlays inside the plot */}
+        <div className="overlay-stack">
+          <div className="overlay-card overlay-card--pie">
+            {/* Tiny title in compact mode lives inside the component */}
+            <PoissonPieChart
+              lambda={lambda}
+              title="Infection Efficiency"
+              compact
+            />
+          </div>
+
+          <div className="overlay-card overlay-card--demo">
+            <PoissonDemo
+              lambda={lambda}
+              defaultX={0}
+              compact
+            />
+          </div>
         </div>
       </div>
 

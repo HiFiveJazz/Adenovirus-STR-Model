@@ -4,6 +4,15 @@
   --poisson-kN: #ff7f0e; /* orange for k >= 1 */
   /* Inner padding that used to be BarChart margin: top right bottom left */
 }
+/* Tiny caption used when compact (overlay) */
+.poisson-mini-title {
+  font-size: 0.8rem;
+  font-weight: 300;
+  margin: 2px 0 -10px;
+  text-align: center;
+  letter-spacing: 0.2px;
+  opacity: 0.9;
+}
 
 .poisson-card {
   display: grid;

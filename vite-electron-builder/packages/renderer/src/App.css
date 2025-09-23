@@ -1,12 +1,8 @@
 #root {
-  /* max-width: 1280px; */
   margin: 0 auto;
-  /* padding: 2rem; */
-  /* text-align: center; */
 }
-/* Your existing app styles can stay above/below. These are the new bits. */
 
-/* A wrapper that stacks the graph and the overlayed pie chart */
+/* Graph container (unchanged from your setup) */
 .graph-stack {
   position: relative;
   width: 100%;
@@ -14,19 +10,46 @@
   margin-top: 16px;
 }
 
-/* The overlay itself, pinned top-left of the graph area */
-.overlay-pie {
-  /* outline: 1px dashed magenta; */
+/* NEW: a vertical stack of overlay cards, anchored to the plot's top-left */
+.overlay-stack {
   position: absolute;
-  top: 66px;
+  top: 66px;     /* your tuned offsets so it sits in the plot area */
   left: 94px;
   z-index: 3;
-  width: clamp(160px, 22vw, 260px);
-  height: clamp(120px, 20vw, 220px);
-  pointer-events: auto; /* keep tooltips/hover working */
+  display: flex;
+  flex-direction: column;
+  gap: 8px;      /* space between pie and demo */
+}
 
+/* Uniform overlay “card” used for both pie and demo */
+.overlay-card {
+  width: clamp(160px, 22vw, 260px);
+  box-sizing: border-box;
+  border-radius: 10px;
+
+  /* frosted glass effect */
   background: color-mix(in oklab, black 20%, transparent);
   backdrop-filter: blur(6px) saturate(1.1);
   border: 1px solid rgba(0,0,0,.12);
-  border-radius: 10px;
+  /* no padding – let inner components manage their own spacing */
 }
+
+/* Heights for each overlay card */
+.overlay-card--pie {
+  height: clamp(120px, 20vw, 220px);
+}
+
+.overlay-card--demo {
+  height: 180px;             /* tweak as you like */
+}
+
+/* Optional: dark mode tweak if you use prefers-color-scheme */
+/*
+@media (prefers-color-scheme: dark) {
+  .overlay-card {
+    background: color-mix(in oklab, black 30%, transparent);
+    border-color: rgba(255,255,255,.08);
+  }
+}
+*/
+

@@ -114,7 +114,12 @@ export default function Graph({
             {/* Y axis in millions */}
             <YAxis
               tickFormatter={(v) => (Number.isFinite(v) ? (v / 1_000_000).toFixed(1) : '')}
-              label={{ value: 'Cells/mL (millions)', angle: -90, position: 'insideLeft' }}
+              label={{
+                value: 'Cells/mL (millions)',
+                angle: -90, position: 'insideLeft',
+                dy: 50,
+                dx: -10,
+              }}
             />
 
             <Tooltip
