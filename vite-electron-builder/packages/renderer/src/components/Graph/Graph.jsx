@@ -158,6 +158,19 @@ export default function Graph({
             />
 
             <Tooltip
+              // Light theme defaults
+                wrapperStyle={{ zIndex: 9999}}              contentStyle={{
+                background: 'rgba(255,255,255,0.96)',
+                border: '1px solid rgba(0,0,0,0.15)',
+                borderRadius: 8,
+                color: '#111',              // <-- text color (items)
+                boxShadow: '0 4px 16px rgba(0,0,0,0.12)'
+              }}
+              labelStyle={{
+                color: '#111',              // <-- "Day ..." label color
+                fontWeight: 600
+              }}
+              itemStyle={{ color: '#111' }} // <-- each row text
               formatter={(v, name) => [Math.round(v).toLocaleString(), name]}
               labelFormatter={(label) => `Day ${label.toFixed(2)}`}
             />
