@@ -1,6 +1,7 @@
-/* Theme tokens */
+/* Shared page width so outputs match graph & inputs */
 :root {
-  --card-bg: transparent;           /* inherit page color by default */
+  --content-width: 940px;     /* match your graph max width */
+  --card-bg: transparent;
   --card-border: #e5e7eb;
   --card-shadow: 0 1px 3px rgba(0,0,0,.05);
   --text-muted: #374151;
@@ -18,72 +19,80 @@
 
 /* Card */
 .output-card {
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
   border: 1px solid var(--card-border);
   border-radius: 12px;
-  padding: clamp(12px, 2.2vw, 20px);
-  max-width: 920px;                 /* allow wider on desktop */
-  width: 100%;
+  padding: 14px;                   /* default spacing */
   background: var(--card-bg);
   box-shadow: var(--card-shadow);
 }
 
-/* Title with fluid sizing */
-.output-title {
-  margin: 0 0 clamp(8px, 1.2vw, 14px) 0;
-  font-size: clamp(1.05rem, 1.2rem + 0.3vw, 1.35rem);
-  line-height: 1.2;
+/* Denser version (less vertical space) */
+.output-card--dense {
+  padding: 10px 12px;
 }
 
-/* Grid: stacks on small screens, 2 cols on wider */
+/* Title row: label left, optional actions right (future-proof) */
+.output-header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  margin-bottom: 8px;
+}
+.output-card--dense .output-header {
+  margin-bottom: 6px;
+}
+
+/* Title with smaller, even line-height */
+.output-title {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.1;
+  font-weight: 600;
+}
+
+/* Two-column grid on ≥640px, single column below */
 .output-grid {
   display: grid;
-  gap: clamp(8px, 1.5vw, 14px);
-  grid-template-columns: 1fr;       /* mobile default */
+  gap: 8px;
+  grid-template-columns: 1fr;
 }
-
-@media (min-width: 640px) {         /* ~tablet+ */
+@media (min-width: 640px) {
   .output-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 16px;
+    row-gap: 6px;
   }
 }
 
-/* Rows: switch to inline grid on wide, block on narrow to avoid squish */
+/* Each row: label left, value right */
 .output-row {
   display: grid;
   grid-template-columns: 1fr auto;
   align-items: baseline;
-  gap: clamp(8px, 1.5vw, 12px);
-  min-width: 0;                     /* fix overflow with long values */
-}
-
-/* On very small screens, stack label/value vertically for readability */
-@media (max-width: 420px) {
-  .output-row {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Labels & values */
-.output-label {
-  color: var(--text-muted);
-  font-size: clamp(0.9rem, 0.95rem + 0.2vw, 1rem);
+  gap: 8px;
   min-width: 0;
 }
 
+/* Label/value text */
+.output-label {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .output-value {
   font-weight: 700;
   font-variant-numeric: tabular-nums;
-  font-size: clamp(1rem, 1.02rem + 0.3vw, 1.15rem);
-  justify-self: end;                 /* keeps values aligned in a neat column */
+  font-size: 0.95rem;
+  justify-self: end;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
-@media (max-width: 420px) {
-  .output-value { justify-self: start; }
-}
-
 .unit {
   font-weight: 500;
   color: var(--text-subtle);
@@ -91,8 +100,9 @@
   white-space: nowrap;
 }
 
-/* Nice touch on very large windows: cap line-length & center */
-@media (min-width: 1280px) {
-  .output-card { margin-inline: auto; }
+/* Tiny screens: left-align values so they don't crowd the edge */
+@media (max-width: 420px) {
+  .output-row { grid-template-columns: 1fr; }
+  .output-value { justify-self: start; }
 }
 

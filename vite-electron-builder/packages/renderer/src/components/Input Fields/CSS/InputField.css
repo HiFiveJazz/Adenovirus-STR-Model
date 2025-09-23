@@ -1,29 +1,124 @@
 .input-field {
   display: grid;
-  gap: 1px;
+  grid-template-rows: auto auto;    /* label row + slider row */
+  gap: 4px;                         /* compact spacing */
   max-width: 1500px;
 }
 
+/* Dense modifier trims spacing further */
+.input-field--dense {
+  gap: 2px;
+}
+
+/* Label row: label left, value right */
 .input-field__label {
-  font-weight: 400;
-  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  margin: 0;
+  line-height: 1.2;
+  font-size: 0.9rem;
+}
+
+.input-field__label-text {
+  font-weight: 500;
 }
 
 .input-field__value {
-  font-weight: 300;
+  font-weight: 600;
   font-variant-numeric: tabular-nums;
+  margin-left: 8px;
+  font-size: 0.9rem;
 }
 
+/* Slider: thin track + small thumb */
 .input-field__range {
-  margin: -2px;
+  -webkit-appearance: none;
+  appearance: none;
   width: 100%;
-  accent-color: #1f77b4; /* tweak to match theme */
+  background: transparent;
+  margin: 0;                /* remove extra vertical space */
+  height: 18px;             /* control overall hit area; track is thinner below */
 }
 
+/* WebKit track */
+.input-field__range::-webkit-slider-runnable-track {
+  height: 4px;              /* thin track */
+  background: #e5e7eb;
+  border-radius: 999px;
+}
+
+/* WebKit thumb */
+.input-field__range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  margin-top: -6px;         /* center thumb on 4px track (thumb 16px -> (16-4)/2) */
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #1f77b4;      /* theme color */
+  border: 0;
+  box-shadow: 0 0 0 2px #fff inset;
+  cursor: pointer;
+}
+
+/* Firefox track */
+.input-field__range::-moz-range-track {
+  height: 4px;
+  background: #e5e7eb;
+  border: none;
+  border-radius: 999px;
+}
+
+/* Firefox thumb */
+.input-field__range::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #1f77b4;
+  border: 0;
+  box-shadow: 0 0 0 2px #fff inset;
+  cursor: pointer;
+}
+
+/* Active/focus states */
+.input-field__range:focus {
+  outline: none;
+}
+.input-field__range:focus::-webkit-slider-thumb {
+  box-shadow: 0 0 0 4px rgba(31, 119, 180, 0.25);
+}
+.input-field__range:focus::-moz-range-thumb {
+  box-shadow: 0 0 0 4px rgba(31, 119, 180, 0.25);
+}
+.input-field__range:active::-webkit-slider-thumb,
+.input-field__range:active::-moz-range-thumb {
+  transform: scale(0.95);
+}
+
+/* Optional scale row (hidden by default) */
 .input-field__scale {
   display: flex;
   justify-content: space-between;
-  font-size: 0.9rem;
-  color: #999999;
+  font-size: 0.75rem;
+  color: #9ca3af;
+  margin-top: 2px;
+  line-height: 1;
+}
+
+/* ===== Optional: grid layout for a block of sliders ===== */
+.inputs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 8px 16px;            /* row x column gaps */
+}
+
+/* Dark mode polish (optional) */
+@media (prefers-color-scheme: dark) {
+  .input-field__range::-webkit-slider-runnable-track,
+  .input-field__range::-moz-range-track {
+    background: #374151;
+  }
+  .input-field__scale { color: #94a3b8; }
 }
 

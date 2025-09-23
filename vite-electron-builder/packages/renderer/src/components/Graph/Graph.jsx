@@ -14,6 +14,36 @@ import {
   Line,
 } from 'recharts'
 
+
+function CustomLegend({ payload, dx = 0, dy = 0 }) {
+  return (
+    <div
+      style={{
+        position: 'relative',
+        transform: `translate(${dx}px, ${dy}px)`,
+        display: 'flex',
+        gap: 16,
+        justifyContent: 'center',
+        alignItems: 'center',
+        fontSize: '0.85rem',
+        lineHeight: 1,
+      }}
+    >
+      {payload?.map((item) => (
+        <div key={item.value} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <span
+            style={{
+              width: 10, height: 10, borderRadius: '50%',
+              background: item.color, display: 'inline-block'
+            }}
+          />
+          <span>{item.value}</span>
+        </div>
+      ))}
+    </div>
+  )
+}
+
 export default function Graph({
   lambda,
   doubTime,
@@ -108,7 +138,12 @@ export default function Graph({
               domain={[0, endHour / 24]}
               tickCount={8}
               tickFormatter={(d) => d.toFixed(1)}
-              label={{ value: 'Days', position: 'insideBottom', offset: -4 }}
+              label={{
+                value: 'Days',
+                position:
+                'insideBottom',
+                offset: -2,
+              }}
             />
 
             {/* Y axis in millions */}
@@ -118,7 +153,7 @@ export default function Graph({
                 value: 'Cells/mL (millions)',
                 angle: -90, position: 'insideLeft',
                 dy: 50,
-                dx: -10,
+                dx: -50,
               }}
             />
 
@@ -126,8 +161,12 @@ export default function Graph({
               formatter={(v, name) => [Math.round(v).toLocaleString(), name]}
               labelFormatter={(label) => `Day ${label.toFixed(2)}`}
             />
-            <Legend />
-
+            {/* <Legend /> */}
+            <Legend
+               // verticalAlign="bottom"
+               // align="center"
+               content={<CustomLegend dx={30} dy={15} />}
+            />
             {/* ⇩ Move the vertical marker to 5.25 days */}
             <ReferenceLine
               x={(infectionHour) / 24}

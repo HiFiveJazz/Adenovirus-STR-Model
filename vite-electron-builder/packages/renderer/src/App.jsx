@@ -62,87 +62,95 @@ export default function App() {
   }, [lambda, doubTime, cellDensity, burstSize])
 
   return (
-    <>
-      <div style={{ display: 'grid', gap: 12, maxWidth: 720 }} />
-
-      <OutputField
-        title="Model Outputs"
-        day5CellDensity={day5CellDensity}
-        infectionEfficiencyDay5={infectionEfficiencyDay5}
-        nonProductiveCellsDay7={nonProductiveCellsDay7}
-        projectedYieldDay7={projectedYieldDay7}
-      />
-
-      {/* Graph with overlay stack anchored inside the plot */}
-      <div className="graph-stack">
-        <Graph
-          lambda={lambda}
-          doubTime={doubTime}
-          cellDensity={cellDensity}
-          infectionHour={120}
-          endHour={168}
-          stepHours={6}
-        />
-
-        {/* Overlays inside the plot */}
-        <div className="overlay-stack">
-          <div className="overlay-card overlay-card--pie">
-            {/* Tiny title in compact mode lives inside the component */}
-            <PoissonPieChart
+    <main className="page">
+      {/* 70%: Graph section */}
+      <section className="section section--graph">
+        <div className="content">
+          <div className="graph-stack">
+            <Graph
               lambda={lambda}
-              title="Infection Efficiency"
-              compact
+              doubTime={doubTime}
+              cellDensity={cellDensity}
+              infectionHour={120}
+              endHour={168}
+              stepHours={6}
             />
-          </div>
 
-          <div className="overlay-card overlay-card--demo">
-            <PoissonDemo
-              lambda={lambda}
-              defaultX={0}
-              compact
+            {/* Overlays inside the plot */}
+            <div className="overlay-stack">
+              <div className="overlay-card overlay-card--pie">
+                <PoissonPieChart
+                  lambda={lambda}
+                  title="Infection Efficiency"
+                  compact
+                />
+              </div>
+              <div className="overlay-card overlay-card--demo">
+                <PoissonDemo lambda={lambda} defaultX={0} compact />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 15%: Sliders section */}
+      <section className="section section--inputs">
+        <div className="content">
+          <div className="inputs-grid fill-height scroll-y">
+            <InputField
+              label="Day 5 MOI (IU/cell)"
+              value={lambda}
+              onChange={setLambda}
+              min={0.1}
+              max={5.5}
+              step={0.05}
+              formatValue={(v) => v.toFixed(2)}
+            />
+            <InputField
+              label="Cell Doubling Time (hours)"
+              value={doubTime}
+              onChange={setDoubTime}
+              min={10}
+              max={72}
+              step={0.1}
+              formatValue={(v) => `${v.toFixed(2)} h`}
+            />
+            <InputField
+              label="Day 0 Cell Density (cells/mL)"
+              value={cellDensity}
+              onChange={setCellDensity}
+              min={3e6}
+              max={3e7}
+              step={1e4}
+              formatValue={(v) => v.toLocaleString()}
+            />
+            <InputField
+              label="Day 7 Burst Size (vp/cell)"
+              value={burstSize}
+              onChange={setBurstSize}
+              min={1}
+              max={1000}
+              step={1}
+              formatValue={(v) => `${Math.round(v)}`}
             />
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Sliders/inputs */}
-      <InputField
-        label="Day 5 MOI (IU/cell)"
-        value={lambda}
-        onChange={setLambda}
-        min={0.1}
-        max={5.5}
-        step={0.05}
-        formatValue={(v) => v.toFixed(2)}
-      />
-      <InputField
-        label="Cell Doubling Time (hours)"
-        value={doubTime}
-        onChange={setDoubTime}
-        min={10}
-        max={72}
-        step={0.1}
-        formatValue={(v) => `${v.toFixed(2)} h`}
-      />
-      <InputField
-        label="Day 0 Cell Density (cells/mL)"
-        value={cellDensity}
-        onChange={setCellDensity}
-        min={3e6}
-        max={3e7}
-        step={1e4}
-        formatValue={(v) => v.toLocaleString()}
-      />
-      <InputField
-        label="Day 7 Burst Size (vp/cell)"
-        value={burstSize}
-        onChange={setBurstSize}
-        min={1}
-        max={1000}
-        step={1}
-        formatValue={(v) => `${Math.round(v)}`}
-      />
-    </>
+      {/* 15%: Outputs section */}
+      <section className="section section--outputs">
+        <div className="content fill-height">
+          <OutputField
+            title="Model Outputs"
+            day5CellDensity={day5CellDensity}
+            infectionEfficiencyDay5={infectionEfficiencyDay5}
+            nonProductiveCellsDay7={nonProductiveCellsDay7}
+            projectedYieldDay7={projectedYieldDay7}
+            dense
+          />
+        </div>
+      </section>
+    </main>
   )
 }
 

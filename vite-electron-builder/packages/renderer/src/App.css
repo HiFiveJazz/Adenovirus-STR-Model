@@ -2,7 +2,25 @@
   margin: 0 auto;
 }
 
+/* shared width for all sections */
+.content {
+  width: 100%;
+  max-width: 940px;   /* same number your graph uses */
+  margin-inline: auto;
+  box-sizing: border-box;
+}
+
 /* Graph container (unchanged from your setup) */
+
+/* Add vertical spacing above Inputs and Outputs */
+.section--inputs {
+  margin-top: 8px;   /* adjust to taste */
+}
+
+.section--outputs {
+  margin-top: 8px;   /* adjust to taste */
+}
+
 .graph-stack {
   position: relative;
   width: 100%;
