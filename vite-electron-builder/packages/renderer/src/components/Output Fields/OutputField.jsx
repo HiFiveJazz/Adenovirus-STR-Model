@@ -25,13 +25,15 @@ export default function OutputField({
   projectedYieldDay7,         // number (vp/mL)
   title = 'Outputs',
 }) {
-  return (
-    <div className="output-card">
-      <h2 className="output-title">{title}</h2>
+ return (
+    <section className="output-card" aria-labelledby="output-title">
+      <h2 className="output-title" id="output-title">{title}</h2>
       <div className="output-grid">
         <div className="output-row">
           <div className="output-label">Cell Density (Day 5):</div>
-          <div className="output-value">{fmtInt(day5CellDensity)} <span className="unit">cells/mL</span></div>
+          <div className="output-value">
+            {fmtInt(day5CellDensity)} <span className="unit">cells/mL</span>
+          </div>
         </div>
         <div className="output-row">
           <div className="output-label">Infection Efficiency (Day 5):</div>
@@ -39,13 +41,19 @@ export default function OutputField({
         </div>
         <div className="output-row">
           <div className="output-label">Non-Productive Cells (Day 7):</div>
-          <div className="output-value">{fmtPct(nonProductiveCellsDay7)}</div>
+          <div className="output-value">
+            {/* If you meant a fraction, keep fmtPct; if it's a count, switch to fmtInt + unit */}
+            {fmtPct(nonProductiveCellsDay7)}
+          </div>
         </div>
         <div className="output-row">
           <div className="output-label">Projected Yield (Day 7):</div>
-          <div className="output-value">{fmtSci(projectedYieldDay7)} <span className="unit">vp/mL</span></div>
+          <div className="output-value">
+            {fmtSci(projectedYieldDay7)} <span className="unit">vp/mL</span>
+          </div>
         </div>
       </div>
-    </div>
+    </section>
   )
 }
+

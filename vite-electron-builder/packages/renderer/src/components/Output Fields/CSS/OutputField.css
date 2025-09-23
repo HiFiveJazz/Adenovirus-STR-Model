@@ -1,34 +1,98 @@
+/* Theme tokens */
+:root {
+  --card-bg: transparent;           /* inherit page color by default */
+  --card-border: #e5e7eb;
+  --card-shadow: 0 1px 3px rgba(0,0,0,.05);
+  --text-muted: #374151;
+  --text-subtle: #6b7280;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --card-border: #2a2f38;
+    --card-shadow: 0 1px 3px rgba(0,0,0,.3);
+    --text-muted: #cbd5e1;
+    --text-subtle: #94a3b8;
+  }
+}
+
+/* Card */
 .output-card {
-  border: 1px solid #e5e7eb;
+  border: 1px solid var(--card-border);
   border-radius: 12px;
-  padding: 16px;
-  max-width: 720px;
-  background: #fff;
-  box-shadow: 0 1px 3px rgba(0,0,0,.05);
+  padding: clamp(12px, 2.2vw, 20px);
+  max-width: 920px;                 /* allow wider on desktop */
+  width: 100%;
+  background: var(--card-bg);
+  box-shadow: var(--card-shadow);
 }
+
+/* Title with fluid sizing */
 .output-title {
-  margin: 0 0 12px 0;
-  font-size: 1.1rem;
+  margin: 0 0 clamp(8px, 1.2vw, 14px) 0;
+  font-size: clamp(1.05rem, 1.2rem + 0.3vw, 1.35rem);
+  line-height: 1.2;
 }
+
+/* Grid: stacks on small screens, 2 cols on wider */
 .output-grid {
   display: grid;
-  gap: 10px;
+  gap: clamp(8px, 1.5vw, 14px);
+  grid-template-columns: 1fr;       /* mobile default */
 }
+
+@media (min-width: 640px) {         /* ~tablet+ */
+  .output-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Rows: switch to inline grid on wide, block on narrow to avoid squish */
 .output-row {
   display: grid;
   grid-template-columns: 1fr auto;
   align-items: baseline;
-  gap: 12px;
+  gap: clamp(8px, 1.5vw, 12px);
+  min-width: 0;                     /* fix overflow with long values */
 }
+
+/* On very small screens, stack label/value vertically for readability */
+@media (max-width: 420px) {
+  .output-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Labels & values */
 .output-label {
-  color: #374151;
+  color: var(--text-muted);
+  font-size: clamp(0.9rem, 0.95rem + 0.2vw, 1rem);
+  min-width: 0;
 }
+
 .output-value {
   font-weight: 700;
   font-variant-numeric: tabular-nums;
+  font-size: clamp(1rem, 1.02rem + 0.3vw, 1.15rem);
+  justify-self: end;                 /* keeps values aligned in a neat column */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
+
+@media (max-width: 420px) {
+  .output-value { justify-self: start; }
+}
+
 .unit {
   font-weight: 500;
-  color: #6b7280;
+  color: var(--text-subtle);
   margin-left: 4px;
+  white-space: nowrap;
 }
+
+/* Nice touch on very large windows: cap line-length & center */
+@media (min-width: 1280px) {
+  .output-card { margin-inline: auto; }
+}
+
