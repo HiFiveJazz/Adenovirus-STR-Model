@@ -61,6 +61,8 @@ export default function PoissonPieChart({
   return (
     <div className={`poisson-pie ${compact ? 'poisson-pie--compact' : ''} ${className}`}>
       {!compact && <h2 className="section-title">{title}</h2>}
+    <div className={`poisson-pie ${compact ? 'poisson-pie--compact' : ''} ${className}`}>
+        {compact ? (<div className="compact-title">{title}</div>) : (<h2 className="section-title">{title}</h2>)}
 
       <div className="poisson-pie-chart">
         {/* IMPORTANT: fill the wrapper */}
@@ -92,6 +94,7 @@ export default function PoissonPieChart({
           </PieChart>
         </ResponsiveContainer>
       </div>
+    </div>
     </div>
   )
 }

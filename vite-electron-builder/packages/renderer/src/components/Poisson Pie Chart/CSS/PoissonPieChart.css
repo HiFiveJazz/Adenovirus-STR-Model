@@ -66,3 +66,11 @@
   font-weight: 300;
 }
 
+.compact-title {
+  font-size: 0.8rem;       /* much smaller */
+  font-weight: 300;
+  margin-bottom: -10px;
+  text-align: center;
+  /* color: #444; */
+}
+
