@@ -1,13 +1,13 @@
 {
-  "name": "root",
-  "description": "Secure boilerplate for Electron app based on Vite",
-  "version": "3.1.0",
+  "name": "Adenovirus STR Model",
+  "description": "“Adenovirus STR Model is an interactive application for simulating adenovirus infection dynamics. It visualizes cell growth, infection efficiency, and projected viral yields with adjustable parameters, providing researchers and students an intuitive way to explore STR bioprocess modeling.",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "author": {
-    "email": "kozackunisoft@gmail.com",
-    "name": "Alex Kozack",
-    "url": "https://kozack.me"
+    "email": "jbhatia@somatek.com",
+    "name": "Somatek Inc.",
+    "url": "https://somatek.com/"
   },
   "main": "packages/entry-point.mjs",
   "workspaces": [
