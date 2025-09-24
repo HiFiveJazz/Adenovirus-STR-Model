@@ -2,15 +2,13 @@
   margin: 0 auto;
 }
 
-/* shared width for all sections */
+/* Shared width container so all sections align with the graph */
 .content {
   width: 100%;
   max-width: 940px;   /* same number your graph uses */
   margin-inline: auto;
   box-sizing: border-box;
 }
-
-/* Graph container (unchanged from your setup) */
 
 /* Add vertical spacing above Inputs and Outputs */
 .section--inputs {
@@ -21,6 +19,7 @@
   margin-top: 8px;   /* adjust to taste */
 }
 
+/* Graph wrapper (your existing setup that the chart lives in) */
 .graph-stack {
   position: relative;
   width: 100%;
@@ -28,10 +27,18 @@
   margin-top: 16px;
 }
 
-/* NEW: a vertical stack of overlay cards, anchored to the plot's top-left */
+/* ---------- Fixed overlay sizes (no viewport scaling) ---------- */
+:root {
+  /* fixed pixel sizes for overlay cards */
+  --overlay-width: 120;
+  --overlay-pie-height: 90px;
+  --overlay-demo-height: 50px;
+}
+
+/* A vertical stack of overlay cards, anchored to the plot's top-left */
 .overlay-stack {
   position: absolute;
-  top: 66px;     /* your tuned offsets so it sits in the plot area */
+  top: 66px;     /* tuned offsets so it sits inside the plot area */
   left: 94px;
   z-index: 3;
   display: flex;
@@ -41,27 +48,45 @@
 
 /* Uniform overlay “card” used for both pie and demo */
 .overlay-card {
-  width: clamp(160px, 22vw, 260px);
+  width: var(--overlay-width);       /* fixed width */
   box-sizing: border-box;
   border-radius: 10px;
 
   /* frosted glass effect */
-  background: color-mix(in oklab, black 20%, transparent);
-  backdrop-filter: blur(6px) saturate(1.1);
-  border: 1px solid rgba(0,0,0,.12);
-  /* no padding – let inner components manage their own spacing */
+  /* background: color-mix(in oklab, black 20%, transparent); */
+  /* backdrop-filter: blur(6px) saturate(1.1); */
+  /* border: 1px solid rgba(0,0,0,.12); */
 }
 
-/* Heights for each overlay card */
-.overlay-card--pie {
-  height: clamp(120px, 20vw, 220px);
+/* Fixed heights for each overlay card */
+.overlay-card--pie  { height: var(--overlay-pie-height); }
+.overlay-card--demo { height: var(--overlay-demo-height); }
+
+/* Remove the orange/blue focus ring on charts when clicked with mouse/touch */
+.graph-container,
+.overlay-card {
+  -webkit-tap-highlight-color: transparent; /* mobile/webkit */
 }
 
-.overlay-card--demo {
-  height: 180px;             /* tweak as you like */
+/* SVG & descendants inside charts: no outline when focus is mouse/touch */
+.graph-container :is(svg, g, path, rect, text):focus-visible,
+.overlay-card   :is(svg, g, path, rect, text):focus-visible {
+  outline: none;
 }
 
-/* Optional: dark mode tweak if you use prefers-color-scheme */
+/* Some Electron/Chromium builds still use :focus on SVG; cover that too */
+.graph-container :is(svg, g, path, rect, text):focus,
+.overlay-card   :is(svg, g, path, rect, text):focus {
+  outline: none;
+}
+
+/* Firefox fallback */
+.graph-container :is(svg, g, path, rect, text):-moz-focusring,
+.overlay-card   :is(svg, g, path, rect, text):-moz-focusring {
+  outline: none;
+}
+
+/* Optional: dark mode polish */
 /*
 @media (prefers-color-scheme: dark) {
   .overlay-card {
@@ -70,3 +95,15 @@
   }
 }
 */
+
+/* Optional: slightly smaller overlays on very narrow windows */
+/*
+@media (max-width: 520px) {
+  :root {
+    --overlay-width: 208px;
+    --overlay-pie-height: 160px;
+    --overlay-demo-height: 144px;
+  }
+}
+*/
+

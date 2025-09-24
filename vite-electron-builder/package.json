@@ -1,5 +1,5 @@
 {
-  "name": "Adenovirus STR Model",
+  "name": "Adenovirus-STR-Model",
   "description": "“Adenovirus STR Model is an interactive application for simulating adenovirus infection dynamics. It visualizes cell growth, infection efficiency, and projected viral yields with adjustable parameters, providing researchers and students an intuitive way to explore STR bioprocess modeling.",
   "version": "1.0.0",
   "private": true,

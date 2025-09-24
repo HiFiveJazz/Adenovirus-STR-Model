@@ -74,3 +74,10 @@
   /* color: #444; */
 }
 
+/* ------- MOBILE: hide the compact (overlay) version on small screens ------- */
+@media (max-width: 640px) {
+  .poisson-pie--compact {
+    display: none !important;
+  }
+}
+

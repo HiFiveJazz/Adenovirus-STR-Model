@@ -56,7 +56,7 @@ export default function PoissonDemo({ lambda = 3, defaultX = 0, compact = false 
               margin={
                 compact
                   // tighter margins; give a bit of left space for the vertical axis label
-                  ? { top: 2, right: 48, bottom: 50, left: 12 }
+                  ? { top: 2, right: 30, bottom: 50, left: 12 }
                   : { top: 0, right: 30, bottom: 0, left: 0 }
               }
             >
@@ -73,8 +73,8 @@ export default function PoissonDemo({ lambda = 3, defaultX = 0, compact = false 
                   value: 'Infectious Events Per Cell',
                   angle: -90,
                   position: 'insideLeft',
-                  offset: 8,                 // small offset so it sits nicely
-                  dy: 70,
+                  offset: 10,                 // small offset so it sits nicely
+                  dy: 75,
                   dx: -5,
                   style: { fontSize: '0.8rem'},
                 }}

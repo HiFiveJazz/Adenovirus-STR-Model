@@ -4,6 +4,7 @@
   --poisson-kN: #ff7f0e; /* orange for k >= 1 */
   /* Inner padding that used to be BarChart margin: top right bottom left */
 }
+
 /* Tiny caption used when compact (overlay) */
 .poisson-mini-title {
   font-size: 0.8rem;
@@ -39,7 +40,6 @@
 .poisson-chart-inner {
   height: 100%;
   /* padding: var(--poisson-chart-padding); */
-
   padding-right: -30px;
   padding-left: -30px;
   /* padding-top: 3px; */
@@ -55,8 +55,18 @@
 .recharts-label-list text {
   font-weight: 300;
 }
+
 .poisson-chart svg {
   overflow: visible !important;
 }
+
 .poisson-chart .recharts-cartesian-axis-tick tspan { font-size: 13px; }
 .poisson-chart .recharts-label-list text { font-size: 0.8rem; font-weight: 300; }
+
+/* ------- MOBILE: hide the compact (overlay) version on small screens ------- */
+@media (max-width: 640px) {
+  .poisson-card--compact {
+    display: none !important;
+  }
+}
+
