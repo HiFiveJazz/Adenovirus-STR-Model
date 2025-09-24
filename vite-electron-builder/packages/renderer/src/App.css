@@ -86,6 +86,28 @@
   outline: none;
 }
 
+/* Style the Show Assumptions trigger button like the popup button */
+button.show-assumptions {
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,.15);
+  /* color: #0b1020; */
+  font-weight: 600;
+  /* cursor: pointer; */
+  /* transition: transform .06s ease, box-shadow .12s ease, background .12s ease; */
+}
+
+/* button.show-assumptions:hover { */
+  /* background: #f1f5f9; */
+  /* transform: translateY(-1px); */
+  /* box-shadow: 0 4px 10px rgba(0,0,0,.08); */
+/* } */
+
+/* button.show-assumptions:active { */
+/*   transform: translateY(0); */
+/*   box-shadow: none; */
+/* } */
+
 /* Optional: dark mode polish */
 /*
 @media (prefers-color-scheme: dark) {

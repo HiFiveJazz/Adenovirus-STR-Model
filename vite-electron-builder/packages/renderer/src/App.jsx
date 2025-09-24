@@ -1,3 +1,4 @@
+// src/App.jsx
 import { useMemo, useState } from 'react'
 import './App.css'
 
@@ -6,10 +7,14 @@ import PoissonPieChart from './components/Poisson Pie Chart/PoissonPieChart'
 import InputField from './components/Input Fields/InputField'
 import OutputField from './components/Output Fields/OutputField'
 import Graph from './components/Graph/Graph'
+import PopUp from './components/Pop Up/PopUp' // keep this path if your folder name has a space
 
 export default function App() {
+  // ✅ missing state restored
   const [lambda, setLambda] = useState(3)
   const [doubTime, setDoubTime] = useState(27.7)
+
+  const [showAssumptions, setShowAssumptions] = useState(false)
   const [cellDensity, setCellDensity] = useState(3e6)
   const [burstSize, setBurstSize] = useState(100)
 
@@ -63,6 +68,15 @@ export default function App() {
 
   return (
     <main className="page">
+      {/* Assumptions popup trigger */}
+      <div className="content" style={{ marginTop: 8, display: 'flex', justifyContent: 'flex-end' }}>
+        <button
+          className="show-assumptions"
+          onClick={() => setShowAssumptions(true)}>Show Assumptions</button>
+      </div>
+
+      <PopUp open={showAssumptions} onClose={() => setShowAssumptions(false)} />
+
       {/* 70%: Graph section */}
       <section className="section section--graph">
         <div className="content">
@@ -96,50 +110,56 @@ export default function App() {
       {/* 15%: Sliders section */}
       <section className="section section--inputs">
         <div className="content">
-          <div className="inputs-grid fill-height scroll-y">
-            <InputField
-              label="Day 5 MOI (IU/cell)"
-              value={lambda}
-              onChange={setLambda}
-              min={0.1}
-              max={5.5}
-              step={0.05}
-              formatValue={(v) => v.toFixed(2)}
-            />
-            <InputField
-              label="Cell Doubling Time (hours)"
-              value={doubTime}
-              onChange={setDoubTime}
-              min={10}
-              max={72}
-              step={0.1}
-              formatValue={(v) => `${v.toFixed(2)} h`}
-            />
-            <InputField
-              label="Day 0 Cell Density (cells/mL)"
-              value={cellDensity}
-              onChange={setCellDensity}
-              min={3e6}
-              max={3e7}
-              step={1e4}
-              formatValue={(v) => v.toLocaleString()}
-            />
-            <InputField
-              label="Day 7 Burst Size (vp/cell)"
-              value={burstSize}
-              onChange={setBurstSize}
-              min={1}
-              max={1000}
-              step={1}
-              formatValue={(v) => `${Math.round(v)}`}
-            />
-          </div>
+          <section className="inputs-card">
+            <header className="inputs-card__header">
+              <h3 className="inputs-card__title">Model Inputs</h3>
+            </header>
+
+            <div className="inputs-grid">
+              <InputField
+                label="Day 5 MOI (IU/cell)"
+                value={lambda}
+                onChange={setLambda}
+                min={0.1}
+                max={5.5}
+                step={0.05}
+                formatValue={(v) => v.toFixed(2)}
+              />
+              <InputField
+                label="Cell Doubling Time (hours)"
+                value={doubTime}
+                onChange={setDoubTime}
+                min={10}
+                max={72}
+                step={0.1}
+                formatValue={(v) => `${v.toFixed(2)} h`}
+              />
+              <InputField
+                label="Day 0 Cell Density (cells/mL)"
+                value={cellDensity}
+                onChange={setCellDensity}
+                min={3e6}
+                max={3e7}
+                step={1e4}
+                formatValue={(v) => v.toLocaleString()}
+              />
+              <InputField
+                label="Day 7 Burst Size (vp/cell)"
+                value={burstSize}
+                onChange={setBurstSize}
+                min={1}
+                max={1000}
+                step={1}
+                formatValue={(v) => `${Math.round(v)}`}
+              />
+            </div>
+          </section>
         </div>
       </section>
 
       {/* 15%: Outputs section */}
       <section className="section section--outputs">
-        <div className="content fill-height">
+        <div className="content">
           <OutputField
             title="Model Outputs"
             day5CellDensity={day5CellDensity}
@@ -153,3 +173,4 @@ export default function App() {
     </main>
   )
 }
+

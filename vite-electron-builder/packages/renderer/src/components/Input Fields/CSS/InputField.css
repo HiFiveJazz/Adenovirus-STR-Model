@@ -5,6 +5,39 @@
   max-width: 1500px;
 }
 
+/* --- Card wrapper for the inputs block --- */
+.inputs-card {
+  width: 100%;
+  max-width: none;                 /* align with your output-card behavior */
+  box-sizing: border-box;
+  border: 1px solid var(--card-border);
+  border-radius: 12px;
+  padding: 10px 12px;              /* dense padding to save vertical space */
+  background: var(--card-bg);
+  box-shadow: var(--card-shadow);
+}
+
+/* Optional tiny title row inside the inputs card */
+.inputs-card__header {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  margin-bottom: 6px;
+}
+.inputs-card__title {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.1;
+  font-weight: 600;
+}
+
+/* Keep your inputs grid tidy inside the card */
+.inputs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 8px 16px; /* row x column gaps */
+}
+
 /* Dense modifier trims spacing further */
 .input-field--dense {
   gap: 2px;
@@ -104,13 +137,6 @@
   color: #9ca3af;
   margin-top: 2px;
   line-height: 1;
-}
-
-/* ===== Optional: grid layout for a block of sliders ===== */
-.inputs-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 8px 16px;            /* row x column gaps */
 }
 
 /* Dark mode polish (optional) */

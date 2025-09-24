@@ -1,5 +1,5 @@
 // src/components/Graph/Graph.jsx
-import { useMemo } from 'react'
+import { useMemo, memo, useEffect, useRef, useState } from 'react'
 import './CSS/Graph.css'
 import {
   ResponsiveContainer,
@@ -14,8 +14,9 @@ import {
   Line,
 } from 'recharts'
 
+const CHART_MARGIN = { top: 10, right: 24, bottom: 10, left: 16 }
 
-function CustomLegend({ payload, dx = 0, dy = 0 }) {
+const CustomLegend = memo(function CustomLegend({ payload, dx = 0, dy = 0 }) {
   return (
     <div
       style={{
@@ -42,13 +43,13 @@ function CustomLegend({ payload, dx = 0, dy = 0 }) {
       ))}
     </div>
   )
-}
+})
 
 export default function Graph({
   lambda,
   doubTime,
   cellDensity,
-  infectionHour = 120,     // 5.00 days (kept as-is for reference)
+  infectionHour = 120,
   endHour = 168,
   stepHours = 6,
   title = 'Cells Over Time',
@@ -58,12 +59,10 @@ export default function Graph({
 
     const infFrac = (Number.isFinite(lambda) && lambda >= 0) ? 1 - Math.exp(-lambda) : NaN
     const uninfFrac = Number.isFinite(infFrac) ? (1 - infFrac) : NaN
-
     const DT = (Number.isFinite(doubTime) && doubTime > 0) ? doubTime : NaN
     const N0 = (Number.isFinite(cellDensity) && cellDensity > 0) ? cellDensity : NaN
 
-    // ⇩ New: infected “starts” at 5.25 days = 126 h
-    const splitHour = infectionHour  // 0.25 day * 24 h = 6 h
+    const splitHour = infectionHour
     const popAtSplit = (Number.isFinite(N0) && Number.isFinite(DT))
       ? N0 * Math.pow(2, splitHour / DT)
       : NaN
@@ -72,14 +71,11 @@ export default function Graph({
       let uninfected, infected
 
       if (h <= splitHour) {
-        // Before split: everyone is still “uninfected”
         uninfected = (Number.isFinite(N0) && Number.isFinite(DT))
           ? N0 * Math.pow(2, h / DT)
           : NaN
         infected = 0
       } else {
-        // After split:
-        // Uninfected keep doubling from the uninfected portion at split
         const uninfAtSplit = (Number.isFinite(popAtSplit) && Number.isFinite(uninfFrac))
           ? popAtSplit * uninfFrac
           : NaN
@@ -87,7 +83,6 @@ export default function Graph({
           ? uninfAtSplit * Math.pow(2, (h - splitHour) / DT)
           : NaN
 
-        // Infected start at split, then decay 7%/day
         const infAtSplit = (Number.isFinite(popAtSplit) && Number.isFinite(infFrac))
           ? popAtSplit * infFrac
           : NaN
@@ -112,12 +107,12 @@ export default function Graph({
     <div className="graph-card">
       <h2 className="graph-title">{title}</h2>
       <div className="graph-container">
-
-        {/* <ResponsiveContainer> */}
         <ResponsiveContainer height="100%" width="100%">
           <AreaChart
             data={data}
-            margin={{ top: 10, right: 24, bottom: 10, left: 16 }}
+            margin={CHART_MARGIN}
+            // Optional: disable any chart-level animation too
+            isAnimationActive={false}
           >
             <defs>
               <linearGradient id="fillUninf" x1="0" y1="0" x2="0" y2="1">
@@ -138,57 +133,43 @@ export default function Graph({
               domain={[0, endHour / 24]}
               tickCount={8}
               tickFormatter={(d) => d.toFixed(1)}
-              label={{
-                value: 'Days',
-                position:
-                'insideBottom',
-                offset: -2,
-              }}
+              label={{ value: 'Days', position: 'insideBottom', offset: -2 }}
             />
 
-            {/* Y axis in millions */}
             <YAxis
               tickFormatter={(v) => (Number.isFinite(v) ? (v / 1_000_000).toFixed(1) : '')}
               label={{
                 value: 'Cells/mL (millions)',
                 angle: -90, position: 'insideLeft',
-                dy: 50,
-                dx: -50,
+                dy: 50, dx: -50,
               }}
             />
 
             <Tooltip
-              // Light theme defaults
-                wrapperStyle={{ zIndex: 9999}}              contentStyle={{
+              wrapperStyle={{ zIndex: 9999 }}
+              contentStyle={{
                 background: 'rgba(255,255,255,0.96)',
                 border: '1px solid rgba(0,0,0,0.15)',
                 borderRadius: 8,
-                color: '#111',              // <-- text color (items)
-                boxShadow: '0 4px 16px rgba(0,0,0,0.12)'
+                color: '#111',
+                boxShadow: '0 4px 16px rgba(0,0,0,0.12)',
               }}
-              labelStyle={{
-                color: '#111',              // <-- "Day ..." label color
-                fontWeight: 600
-              }}
-              itemStyle={{ color: '#111' }} // <-- each row text
+              labelStyle={{ color: '#111', fontWeight: 600 }}
+              itemStyle={{ color: '#111' }}
               formatter={(v, name) => [Math.round(v).toLocaleString(), name]}
               labelFormatter={(label) => `Day ${label.toFixed(2)}`}
             />
-            {/* <Legend /> */}
-            <Legend
-               // verticalAlign="bottom"
-               // align="center"
-               content={<CustomLegend dx={30} dy={15} />}
-            />
-            {/* ⇩ Move the vertical marker to 5.25 days */}
+
+            <Legend content={<CustomLegend dx={30} dy={15} />} />
+
             <ReferenceLine
-              x={(infectionHour) / 24}
+              x={infectionHour / 24}
               stroke="#8884d8"
               strokeDasharray="4 4"
               label={{ value: 'Infection Begins', position: 'top' }}
             />
 
-            {/* Stacked areas */}
+            {/* Disable series animations for instant updates */}
             <Area
               type="monotone"
               dataKey="uninfected"
@@ -196,9 +177,7 @@ export default function Graph({
               stackId="cells"
               stroke="#1f77b4"
               fill="url(#fillUninf)"
-              isAnimationActive
-              animationDuration={500}
-              animationEasing="ease-in-out"
+              isAnimationActive={false}
             />
             <Area
               type="monotone"
@@ -207,12 +186,8 @@ export default function Graph({
               stackId="cells"
               stroke="#ff7f0e"
               fill="url(#fillInf)"
-              isAnimationActive
-              animationDuration={500}
-              animationEasing="ease-in-out"
+              isAnimationActive={false}
             />
-
-            {/* Optional thin line for total */}
             <Line
               type="monotone"
               dataKey="total"
@@ -220,9 +195,7 @@ export default function Graph({
               stroke="#333"
               strokeWidth={2}
               dot={false}
-              isAnimationActive
-              animationDuration={500}
-              animationEasing="ease-in-out"
+              isAnimationActive={false}
             />
           </AreaChart>
         </ResponsiveContainer>

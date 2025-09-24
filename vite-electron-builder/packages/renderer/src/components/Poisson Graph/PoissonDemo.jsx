@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { poisson } from './calculations'
 import './CSS/Poisson.css'
 import {
@@ -14,16 +14,9 @@ import {
 } from 'recharts'
 
 export default function PoissonDemo({ lambda = 3, defaultX = 0, compact = false }) {
-  const [x, setX] = useState(defaultX)
+  // NOTE: x state wasn't used for interaction—removed to avoid extra re-renders.
 
-  const value = useMemo(() => {
-    const xi = Number(x)
-    const lam = Number(lambda)
-    if (!Number.isFinite(xi) || xi < 0 || Math.floor(xi) !== xi) return NaN
-    if (!Number.isFinite(lam) || lam <= 0) return NaN
-    return poisson(xi, lam)
-  }, [x, lambda])
-
+  // k = 0..12, store percent values (p * 100)
   const dist = useMemo(() => {
     const lam = Number(lambda)
     if (!Number.isFinite(lam) || lam <= 0) return []
@@ -33,14 +26,12 @@ export default function PoissonDemo({ lambda = 3, defaultX = 0, compact = false 
     }))
   }, [lambda])
 
-  const k0Color =
-    getComputedStyle(document.documentElement).getPropertyValue('--poisson-k0')?.trim() || '#1f77b4'
-  const kNColor =
-    getComputedStyle(document.documentElement).getPropertyValue('--poisson-kN')?.trim() || '#ff7f0e'
+  // Use CSS vars directly; works fine as SVG fill values
+  const k0Color = 'var(--poisson-k0)'
+  const kNColor = 'var(--poisson-kN)'
 
   return (
     <div className={`poisson-card ${compact ? 'poisson-card--compact' : ''}`}>
-      {/* Title: tiny caption in compact; full h2 otherwise */}
       {compact ? (
         <div className="poisson-mini-title">Cell Population (Day 5)</div>
       ) : (
@@ -55,7 +46,6 @@ export default function PoissonDemo({ lambda = 3, defaultX = 0, compact = false 
               layout="vertical"
               margin={
                 compact
-                  // tighter margins; give a bit of left space for the vertical axis label
                   ? { top: 2, right: 30, bottom: 50, left: 12 }
                   : { top: 0, right: 30, bottom: 0, left: 0 }
               }
@@ -65,7 +55,7 @@ export default function PoissonDemo({ lambda = 3, defaultX = 0, compact = false 
               <YAxis
                 type="category"
                 dataKey="k"
-                width={compact ? 34 : 50}   // a touch more than before so the label fits
+                width={compact ? 34 : 50}
                 axisLine={false}
                 tickLine={false}
                 tick={{ fontSize: compact ? 11 : 13 }}
@@ -73,17 +63,17 @@ export default function PoissonDemo({ lambda = 3, defaultX = 0, compact = false 
                   value: 'Infectious Events Per Cell',
                   angle: -90,
                   position: 'insideLeft',
-                  offset: 10,                 // small offset so it sits nicely
+                  offset: 10,
                   dy: 75,
                   dx: -5,
-                  style: { fontSize: '0.8rem'},
+                  style: { fontSize: '0.8rem' },
                 }}
               />
               <Tooltip
                 formatter={(v) => [`${Number(v).toFixed(2)}%`, 'Percent']}
                 labelFormatter={(label) => `k = ${label}`}
               />
-              <Bar dataKey="pPct" barCategoryGap={compact ? '12%' : '10%'}>
+              <Bar dataKey="pPct" barCategoryGap={compact ? '12%' : '10%'} isAnimationActive={false}>
                 {dist.map((entry, i) => (
                   <Cell key={`cell-${i}`} fill={entry.k === 0 ? k0Color : kNColor} />
                 ))}
