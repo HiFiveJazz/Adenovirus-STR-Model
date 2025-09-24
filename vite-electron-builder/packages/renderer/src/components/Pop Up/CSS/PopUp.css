@@ -10,7 +10,7 @@
   padding: 16px;
 
   opacity: 0;
-  transition: opacity 180ms ease;
+  transition: opacity 500ms ease;
 }
 .popup-backdrop.is-visible { opacity: 1; }
 
@@ -29,8 +29,8 @@
   opacity: 0;
   transform: translateY(8px) scale(0.99);
   transition:
-    opacity 200ms ease,
-    transform 220ms cubic-bezier(.2,.8,.2,1);
+    opacity 400ms ease,
+    transform 480ms cubic-bezier(.2,.8,.2,1);
 }
 .popup-modal.is-visible {
   opacity: 1;

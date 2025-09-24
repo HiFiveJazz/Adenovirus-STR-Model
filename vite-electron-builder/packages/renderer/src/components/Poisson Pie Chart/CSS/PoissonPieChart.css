@@ -52,7 +52,13 @@
 }
 
 .pie-label--outside {
-  fill: #333;         /* darker text when placed outside */
+  fill: #333;
+}
+
+@media (prefers-color-scheme: dark) {
+  .pie-label--outside {
+    fill: #fff; /* white text on dark backgrounds */
+  }
 }
 
 /* Smaller labels in compact mode to help fit */

@@ -45,16 +45,17 @@ export default function OutputField({
         </div>
 
         <div className="output-row">
-          <div className="output-label">Non-Productive Cells (Day 7)</div>
-          <div className="output-value">{fmtPct(nonProductiveCellsDay7)}</div>
-        </div>
-
-        <div className="output-row">
           <div className="output-label">Projected Yield (Day 7)</div>
           <div className="output-value">
             {fmtSci(projectedYieldDay7)} <span className="unit">vp/mL</span>
           </div>
         </div>
+
+        <div className="output-row">
+          <div className="output-label">Non-Productive Cells (Day 7)</div>
+          <div className="output-value">{fmtPct(nonProductiveCellsDay7)}</div>
+        </div>
+
       </div>
     </section>
   )

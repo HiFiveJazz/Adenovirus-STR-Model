@@ -1,0 +1,114 @@
+/* Backdrop */
+.drm-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.32);
+  backdrop-filter: blur(6px) saturate(1.05);
+  display: grid;
+  place-items: center;
+  padding: 16px;
+
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+.drm-backdrop.is-visible { opacity: 1; }
+
+/* Modal card */
+.drm-modal {
+  width: min(720px, 92vw);
+  border-radius: 14px;
+  border: 1px solid rgba(0,0,0,.12);
+  background: #fff;
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.18),
+    0 2px 10px rgba(0,0,0,.08);
+  color: #111;
+  padding: clamp(14px, 2.6vw, 22px);
+
+  opacity: 0;
+  transform: translateY(8px) scale(0.99);
+  transition:
+    opacity 200ms ease,
+    transform 220ms cubic-bezier(.2,.8,.2,1);
+}
+.drm-modal.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Title & text */
+.drm-title {
+  margin: 0 0 10px 0;
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: .2px;
+}
+.drm-text {
+  margin: 0 0 8px 0;
+  line-height: 1.4;
+}
+.drm-contact {
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Footer button */
+.drm-footer {
+  margin-top: 14px;
+  display: grid;
+  justify-content: end;
+}
+.drm-button {
+  padding: 8px 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(0,0,0,.12);
+  background: #f5f7fb;
+  color: #0b1020;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform .06s ease, box-shadow .12s ease, background .12s ease;
+}
+.drm-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0,0,0,.12);
+}
+.drm-button:active {
+  transform: translateY(0);
+  box-shadow: none;
+}
+
+/* ==== Animated gradient text (blue/orange, moving) ==== */
+.animated-gradient-text {
+  position: relative;
+  display: inline-block;
+  font-weight: 600;
+  cursor: pointer;
+}
+.gradient-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, #1f77b4, #ff7f0e, #1f77b4);
+  background-size: 300% 100%;
+  animation: gradient-move 4s linear infinite;
+  filter: brightness(1.05);
+  opacity: 0.9;
+
+  /* For Safari masking */
+  -webkit-mask: linear-gradient(#fff 0 0) text;
+          mask: linear-gradient(#fff 0 0) text;
+}
+.text-content {
+  position: relative;
+  z-index: 1;
+  background: inherit;
+  -webkit-background-clip: text;
+          background-clip: text;
+  color: transparent;
+}
+@keyframes gradient-move {
+  0%   { background-position:   0% 50% }
+  50%  { background-position: 100% 50% }
+  100% { background-position:   0% 50% }
+}
+
